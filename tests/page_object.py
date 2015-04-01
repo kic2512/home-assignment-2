@@ -154,6 +154,9 @@ class CreateTopicPage(Page):
         self.driver.find_element_by_xpath(self.BLOCK_COMMENT).click()
 
     def get_error_message(self):
+        WebDriverWait(self.driver, 10, 0.1).until(
+            lambda d: d.find_element_by_xpath(self.ERRORS_MESSAGES)
+        )
         return self.driver.find_element_by_xpath(self.ERRORS_MESSAGES).text
 
     def set_main_bold(self):

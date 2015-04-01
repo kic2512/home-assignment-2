@@ -14,12 +14,15 @@ MY_NAME = u'Господин Губернатор'
 
 class TestWithAuth(TestCase):
     def setUp(self):
-        browser = os.environ.get('TTHA2BROWSER', 'FIREFOX')
+        browser = os.environ.get('TTHA2BROWSER', 'CHROME')
 
         self.driver = Remote(
             command_executor='http://127.0.0.1:4444/wd/hub',
             desired_capabilities=getattr(DesiredCapabilities, browser).copy()
         )
+
+        self.current_topic_page = TopicPage(self.driver)
+        self.is_delete = False
 
         user_email = 'ftest11@tech-mail.ru'
         password = os.environ.get('TTHA2PASSWORD')
@@ -35,6 +38,9 @@ class TestWithAuth(TestCase):
         self.assertEqual(MY_NAME, current_name)
 
     def tearDown(self):
+        if self.is_delete:
+            self.current_topic_page.delete()
+            self.current_topic_page.get_username_from_settings()
         self.driver.quit()
 
 
@@ -88,9 +94,8 @@ class CreateTopic(TestWithAuth):
         self.assertEqual(fields['title'], topic_title)
         self.assertEqual(fields['main_text'], topic_text)
 
-        topic_page.delete()
-        topic_title = topic_page.get_title()
-        self.assertNotEqual(fields['title'], topic_title)
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_public(self):
         fields = {
@@ -112,7 +117,8 @@ class CreateTopic(TestWithAuth):
         self.assertEqual(fields['title'], topic_text)
         self.assertEqual(fields['short_text'], short_text)
 
-        fludilka_page.delete()
+        self.current_topic_page = fludilka_page
+        self.is_delete = True
 
     def test_create_topic_with_quiz(self):
         fields = {
@@ -141,7 +147,8 @@ class CreateTopic(TestWithAuth):
         self.assertEqual(quiz_first, first_quiz_answer)
         self.assertEqual(quiz_second, second_quiz_answer)
 
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_add_comment(self):
         fields = {
@@ -164,7 +171,8 @@ class CreateTopic(TestWithAuth):
 
         real_comment = topic_page.get_comment()
         self.assertEqual(comment_text, real_comment)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_block_comments(self):
         fields = {
@@ -181,7 +189,9 @@ class CreateTopic(TestWithAuth):
         topic_page = TopicPage(self.driver)
         check = self.is_comment_available(topic_page)
         self.assertFalse(check)
-        topic_page.delete()
+
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_without_title(self):
         fields = {
@@ -248,7 +258,8 @@ class CreateTopic(TestWithAuth):
         draft_page.get_username_from_settings()
         topic_title = draft_page.get_not_public_topic()
         self.assertEqual(fields['title'], topic_title)
-        draft_page.delete()
+        self.current_topic_page = draft_page
+        self.is_delete = True
 
 
 class TestBBCode(TestWithAuth):
@@ -308,7 +319,9 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         bold_txt = topic_page.get_bold()
         self.assertEqual(fields['main_text'], bold_txt)
-        topic_page.delete()
+
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_italic(self):
         fields = {
@@ -323,7 +336,8 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         italic_txt = topic_page.get_italic()
         self.assertEqual(fields['main_text'], italic_txt)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_list(self):
         fields = {
@@ -338,7 +352,8 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         list_txt = topic_page.get_list()
         self.assertEqual(fields['main_text'], list_txt)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_ordered_list(self):
         fields = {
@@ -353,7 +368,8 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         ordered_list_txt = topic_page.get_ordered_list()
         self.assertEqual(fields['main_text'], ordered_list_txt)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_link(self):
         fields = {
@@ -371,7 +387,8 @@ class TestBBCode(TestWithAuth):
         link_href = topic_page.get_link_href()
         self.assertEqual(fields['main_text'], link_txt)
         self.assertEqual(LINK_TO_HABR, link_href)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_img_link(self):
         fields = {
@@ -387,7 +404,8 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         img_link_src = topic_page.get_src_img()
         self.assertEqual(LINK_TO_KITTY, img_link_src)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_user_link(self):
         fields = {
@@ -407,7 +425,8 @@ class TestBBCode(TestWithAuth):
         current_user_href = topic_page.get_user_href_from_settings()
 
         self.assertEqual(current_user_href, user_link_href)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
 
     def test_create_topic_with_img_local(self):
         fields = {
@@ -421,6 +440,8 @@ class TestBBCode(TestWithAuth):
         create_page.submit()
 
         topic_page = TopicPage(self.driver)
+        topic_page.get_username_from_settings()
         is_img_exist = self.check_img(topic_page)
         self.assertTrue(is_img_exist)
-        topic_page.delete()
+        self.current_topic_page = topic_page
+        self.is_delete = True
