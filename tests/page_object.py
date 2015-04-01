@@ -95,7 +95,7 @@ class CreateTopicPage(Page):
     AREA_SHORT_AROUND_CLC = '(//div[@class="CodeMirror-sizer"])[1]'
     AREA_MAIN_AROUND_CLC = '(//div[@class="CodeMirror-sizer"])[2]'
 
-    QUIZ_CHECK = '//*[@id="content"]/div/div[1]/form/div/p[7]/label'  # //input[@name="add_pool"] not work
+    QUIZ_CHECK = '//p/label[contains(text()[normalize-space()], "Добавить опрос к топику")]'
     QUIZ_TITLE = '//input[@name="question"]'
     QUIZ_VAR0 = '//input[@name="form-0-answer"]'
     QUIZ_VAR1 = '//input[@name="form-1-answer"]'
@@ -198,9 +198,9 @@ class CreateTopicPage(Page):
 
 class TopicPage(Topic):
     BLOG = '//*[@class="topic-blog"]'
-    QUIZ_TITLE = '//ui[class="pool-vote"]/li/label'
-    QUIZ_VAR0 = '//*[@id="content"]/div/div[1]/article/div/div[1]/form/ul/li[1]/label'  # TODO CHANGE
-    QUIZ_VAR1 = '//*[@id="content"]/div/div[1]/article/div/div[1]/form/ul/li[2]/label'  # TODO CHANGE
+    QUIZ_TITLE = '//ul[@class="poll-vote"]/li/label'
+    QUIZ_VAR0 = '(//ul[@class="poll-vote"]/li/label)[1]'  # TODO CHANGE
+    QUIZ_VAR1 = '(//ul[@class="poll-vote"]/li/label)[2]'  # TODO CHANGE
     ADD_COMMENT_LNK = '//a[text() = "Оставить комментарий"]'
     COMMENT_AREA = '//div[@class="CodeMirror-sizer"]'
     COMMENT_SEND = '//button[text() = "добавить"]'
