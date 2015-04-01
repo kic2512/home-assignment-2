@@ -32,12 +32,12 @@ class Page(object):
         self.driver.get(url)
 
     def get_username_from_settings(self):
-        return WebDriverWait(self.driver, 30, 0.1).until(
+        return WebDriverWait(self.driver, 10, 0.1).until(
             lambda d: d.find_element_by_xpath(self.USERNAME).text
         )
 
     def get_user_href_from_settings(self):
-        return WebDriverWait(self.driver, 30, 0.1).until(
+        return WebDriverWait(self.driver, 10, 0.1).until(
             lambda d: d.find_element_by_xpath(self.USERNAME).get_attribute('href')
         )
 
@@ -57,7 +57,7 @@ class Topic(Page):
 
     def delete(self):
         self.driver.find_element_by_xpath(self.DELETE_BUTTON).click()
-        WebDriverWait(self.driver, 30, 0.1).until(
+        WebDriverWait(self.driver, 10, 0.1).until(
             lambda d: d.find_element_by_xpath(self.DELETE_BUTTON_CONFIRM)
         )
         self.driver.find_element_by_xpath(self.DELETE_BUTTON_CONFIRM).click()
@@ -92,10 +92,10 @@ class CreateTopicPage(Page):
     TITLE = '//input[@name="title"]'
     CREATE_BUTTON = '//button[contains(text(),"Создать")]'
 
-    AREA_SHORT_AROUND_CLC = '//*[@id="content"]/div/div[1]/form/div/div[3]/div[6]/div[1]/div/div/div/div[3]/pre[1]'  # TODO CHANGE
-    AREA_MAIN_AROUND_CLC = '//*[@id="content"]/div/div[1]/form/div/div[6]/div[6]/div[1]'  # TODO CHANGE
+    AREA_SHORT_AROUND_CLC = '(//div[@class="CodeMirror-sizer"])[1]'
+    AREA_MAIN_AROUND_CLC = '(//div[@class="CodeMirror-sizer"])[2]'
 
-    QUIZ_CHECK = '//*[@id="content"]/div/div[1]/form/div/p[7]/label'  # TODO CHANGE
+    QUIZ_CHECK = '//*[@id="content"]/div/div[1]/form/div/p[7]/label'  # //input[@name="add_pool"] not work
     QUIZ_TITLE = '//input[@name="question"]'
     QUIZ_VAR0 = '//input[@name="form-0-answer"]'
     QUIZ_VAR1 = '//input[@name="form-1-answer"]'
@@ -182,7 +182,7 @@ class CreateTopicPage(Page):
         self.driver.find_element_by_xpath(self.USR_LINK_MAIN).click()
         find_by = USER_NAME_FOR_LINK.split(' ')[1]
         self.driver.find_element_by_xpath(self.USR_INPUT_FIELD).send_keys(find_by)
-        WebDriverWait(self.driver, 30, 0.1).until(
+        WebDriverWait(self.driver, 10, 0.1).until(
             lambda d: d.find_element_by_xpath(self.USR_INPUT_CHOICE).text
         )
         self.driver.find_element_by_xpath(self.USR_INPUT_CHOICE).click()

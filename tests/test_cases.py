@@ -39,6 +39,9 @@ class TestWithAuth(TestCase):
 
 
 class CreateTopic(TestWithAuth):
+    # В этом кейсе проверяется функционал
+    # создания топика и отображения топика
+
     def is_comment_available(self, topic_page):
         try:
             topic_page.add_comment()
@@ -249,6 +252,9 @@ class CreateTopic(TestWithAuth):
 
 
 class TestBBCode(TestWithAuth):
+    # В этом кейсе проверяется функционал
+    # стороннего элемента BB-Code
+
     def get_effect_func(self, create_page, effect):
         effects = {
             'main_bold': create_page.set_main_bold,
