@@ -116,6 +116,7 @@ class CreateTopicPage(Page):
     USR_INPUT_CHOICE = '//*[@id="list-body"]/tr[1]/td/div/p[2]/a'
     NOT_PUBLIC = '//input[@name="publish"]'
     FILE_MAIN_INPUT = '(//input[@name="filedata"])[2]'
+    MIRROR_MAIN_CODE = '(//div[@class="CodeMirror-code"]/pre/span)[2]'
 
     def blog_select_open(self):
         self.driver.find_element_by_xpath(self.BLOGSELECT).click()
@@ -194,13 +195,16 @@ class CreateTopicPage(Page):
         path = getcwd() + "/kitty.jpg"
         self.driver.execute_script('$(".markdown-upload-photo-container").show()')
         self.driver.find_element_by_xpath(self.FILE_MAIN_INPUT).send_keys(path)
+        WebDriverWait(self.driver, 10, 0.1).until(
+            lambda d: d.find_element_by_xpath(self.MIRROR_MAIN_CODE)
+        )
 
 
 class TopicPage(Topic):
     BLOG = '//*[@class="topic-blog"]'
     QUIZ_TITLE = '//ul[@class="poll-vote"]/li/label'
-    QUIZ_VAR0 = '(//ul[@class="poll-vote"]/li/label)[1]'  # TODO CHANGE
-    QUIZ_VAR1 = '(//ul[@class="poll-vote"]/li/label)[2]'  # TODO CHANGE
+    QUIZ_VAR0 = '(//ul[@class="poll-vote"]/li/label)[1]'
+    QUIZ_VAR1 = '(//ul[@class="poll-vote"]/li/label)[2]'
     ADD_COMMENT_LNK = '//a[text() = "Оставить комментарий"]'
     COMMENT_AREA = '//div[@class="CodeMirror-sizer"]'
     COMMENT_SEND = '//button[text() = "добавить"]'
