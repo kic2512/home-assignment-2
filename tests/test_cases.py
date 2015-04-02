@@ -91,11 +91,12 @@ class CreateTopic(TestWithAuth):
         topic_page = TopicPage(self.driver)
         topic_title = topic_page.get_title()
         topic_text = topic_page.get_text()
-        self.assertEqual(fields['title'], topic_title)
-        self.assertEqual(fields['main_text'], topic_text)
 
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(fields['title'], topic_title)
+        self.assertEqual(fields['main_text'], topic_text)
 
     def test_create_topic_with_public(self):
         fields = {
@@ -114,11 +115,11 @@ class CreateTopic(TestWithAuth):
         topic_text = fludilka_page.get_public_topic_title()
         short_text = fludilka_page.get_public_topic_short_message()
 
-        self.assertEqual(fields['title'], topic_text)
-        self.assertEqual(fields['short_text'], short_text)
-
         self.current_topic_page = fludilka_page
         self.is_delete = True
+
+        self.assertEqual(fields['title'], topic_text)
+        self.assertEqual(fields['short_text'], short_text)
 
     def test_create_topic_with_quiz(self):
         fields = {
@@ -144,11 +145,11 @@ class CreateTopic(TestWithAuth):
         first_quiz_answer = topic_page.get_first_quiz_var()
         second_quiz_answer = topic_page.get_second_quiz_var()
 
-        self.assertEqual(quiz_first, first_quiz_answer)
-        self.assertEqual(quiz_second, second_quiz_answer)
-
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(quiz_first, first_quiz_answer)
+        self.assertEqual(quiz_second, second_quiz_answer)
 
     def test_create_topic_add_comment(self):
         fields = {
@@ -169,10 +170,11 @@ class CreateTopic(TestWithAuth):
         down_keys(self.driver, comment_text)
         topic_page.comment_send()
 
-        real_comment = topic_page.get_comment()
-        self.assertEqual(comment_text, real_comment)
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        real_comment = topic_page.get_comment()
+        self.assertEqual(comment_text, real_comment)
 
     def test_create_topic_block_comments(self):
         fields = {
@@ -188,10 +190,11 @@ class CreateTopic(TestWithAuth):
 
         topic_page = TopicPage(self.driver)
         check = self.is_comment_available(topic_page)
-        self.assertFalse(check)
 
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertFalse(check)
 
     def test_create_topic_without_title(self):
         fields = {
@@ -257,9 +260,11 @@ class CreateTopic(TestWithAuth):
         draft_page.open()
         draft_page.get_username_from_settings()
         topic_title = draft_page.get_not_public_topic()
-        self.assertEqual(fields['title'], topic_title)
+
         self.current_topic_page = draft_page
         self.is_delete = True
+
+        self.assertEqual(fields['title'], topic_title)
 
 
 class TestBBCode(TestWithAuth):
@@ -319,10 +324,11 @@ class TestBBCode(TestWithAuth):
 
         topic_page = TopicPage(self.driver)
         bold_txt = topic_page.get_bold()
-        self.assertEqual(fields['main_text'], bold_txt)
 
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(fields['main_text'], bold_txt)
 
     def test_create_topic_with_italic(self):
         fields = {
@@ -336,9 +342,11 @@ class TestBBCode(TestWithAuth):
 
         topic_page = TopicPage(self.driver)
         italic_txt = topic_page.get_italic()
-        self.assertEqual(fields['main_text'], italic_txt)
+
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(fields['main_text'], italic_txt)
 
     def test_create_topic_with_list(self):
         fields = {
@@ -352,9 +360,11 @@ class TestBBCode(TestWithAuth):
 
         topic_page = TopicPage(self.driver)
         list_txt = topic_page.get_list()
-        self.assertEqual(fields['main_text'], list_txt)
+
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(fields['main_text'], list_txt)
 
     def test_create_topic_with_ordered_list(self):
         fields = {
@@ -368,9 +378,11 @@ class TestBBCode(TestWithAuth):
 
         topic_page = TopicPage(self.driver)
         ordered_list_txt = topic_page.get_ordered_list()
-        self.assertEqual(fields['main_text'], ordered_list_txt)
+
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(fields['main_text'], ordered_list_txt)
 
     def test_create_topic_with_link(self):
         fields = {
@@ -386,10 +398,12 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         link_txt = topic_page.get_link_text()
         link_href = topic_page.get_link_href()
-        self.assertEqual(fields['main_text'], link_txt)
-        self.assertEqual(LINK_TO_HABR, link_href)
+
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(fields['main_text'], link_txt)
+        self.assertEqual(LINK_TO_HABR, link_href)
 
     def test_create_topic_with_img_link(self):
         fields = {
@@ -404,9 +418,11 @@ class TestBBCode(TestWithAuth):
 
         topic_page = TopicPage(self.driver)
         img_link_src = topic_page.get_src_img()
-        self.assertEqual(LINK_TO_KITTY, img_link_src)
+
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(LINK_TO_KITTY, img_link_src)
 
     def test_create_topic_with_user_link(self):
         fields = {
@@ -425,9 +441,10 @@ class TestBBCode(TestWithAuth):
         user_link_href = topic_page.get_user_link_href()
         current_user_href = topic_page.get_user_href_from_settings()
 
-        self.assertEqual(current_user_href, user_link_href)
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertEqual(current_user_href, user_link_href)
 
     def test_create_topic_with_img_local(self):
         fields = {
@@ -442,6 +459,8 @@ class TestBBCode(TestWithAuth):
         topic_page = TopicPage(self.driver)
         topic_page.get_username_from_settings()
         is_img_exist = self.check_img(topic_page)
-        self.assertTrue(is_img_exist)
+
         self.current_topic_page = topic_page
         self.is_delete = True
+
+        self.assertTrue(is_img_exist)
