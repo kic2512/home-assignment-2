@@ -266,7 +266,7 @@ class TestBBCode(TestWithAuth):
     # В этом кейсе проверяется функционал
     # стороннего элемента BB-Code
 
-    def get_effect_func(self, create_page, effect):
+    def set_effect_func(self, create_page, effect):
         effects = {
             'main_bold': create_page.set_main_bold,
             'main_italic': create_page.set_main_italic,
@@ -280,7 +280,7 @@ class TestBBCode(TestWithAuth):
         if effect in effects:
             effects[effect]()
 
-    def open_and_set_effects_to_topic(self, fields, effect_for_short=None, effect_for_main=None):
+    def open_and_set_effects_to_topic(self, fields, effect_for_short=None, effect_for_main=None, is_main_txt=True):
         create_page = CreateTopicPage(self.driver)
         create_page.open()
 
@@ -290,13 +290,14 @@ class TestBBCode(TestWithAuth):
 
         create_page.activate_short_text()
         if effect_for_short:
-            self.get_effect_func(create_page, effect_for_short)
+            self.set_effect_func(create_page, effect_for_short)
         down_keys(create_page.driver, fields['short_text'])
 
         create_page.activate_main_text()
         if effect_for_main:
-            self.get_effect_func(create_page, effect_for_main)
-        down_keys(create_page.driver, fields['main_text'])
+            self.set_effect_func(create_page, effect_for_main)
+        if is_main_txt:
+            down_keys(create_page.driver, fields['main_text'])
         return create_page
 
     def check_img(self, page):
@@ -433,9 +434,8 @@ class TestBBCode(TestWithAuth):
             'blog': 'Флудилка',
             'title': u'Создание топика с локальной картинкой',
             'short_text': u'Короткий текст',
-            'main_text': u'Текст'
         }
-        create_page = self.open_and_set_effects_to_topic(fields, effect_for_main='main_img_local')
+        create_page = self.open_and_set_effects_to_topic(fields, effect_for_main='main_img_local', is_main_txt=False)
 
         create_page.submit()
 
